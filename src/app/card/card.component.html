@@ -1,0 +1,28 @@
+
+<div class="Card">
+ <div class="Card_inner" *ngIf="card">
+
+  <div class="Card_Header">
+    <span class="Card_Header_Name">{{card.Name}}</span>
+    <span class="Card_Header_Author">By: {{card.CreatedBy}}</span>
+  </div>
+  <div class="Card_Body">
+    <p title="{{card.Description}}"><span>Description : </span> {{card.Description}} </p>
+    <p><span>Created On : </span> {{card.CreatedDate}} </p>
+    <p><span>Venue : </span> {{card.Venue}} </p>
+    <p><span>Happening On : </span> {{card.EventDate}} </p>
+    <p><span>Interested : </span> {{card.Joinee}} </p>
+  </div>
+
+  <div class="Card_Footer">
+      <button class="Card_Footer_Button">Like</button>
+      <button class="Card_Footer_Button">Join</button>
+      <button class="Card_Footer_Action">Edit</button>
+      <button class="Card_Footer_Action">Remove</button>
+  </div>
+ </div>
+
+ <div *ngIf="!card" class="Card_Create">
+   Click to create an Event
+ </div>
+</div>

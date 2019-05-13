@@ -1,0 +1,39 @@
+@import '../common/common-styles.scss';
+
+.header-wrap {
+    width:100%;
+    height: 46px;
+    background: $brand-color;
+    font-size: $large-font;
+    font-family: 'Courier New', Courier, monospace;
+    display: inline-block;
+    line-height: 1.4;
+    padding: 2px;
+    .title{
+        @extend %display-inlineBlock;
+        width: 85%;
+        font-style: oblique;
+        font-variant: all-petite-caps;
+        font-weight: 600;
+        background-image: url(../../assets/Logo.PNG);
+        background-repeat: no-repeat;
+        background-size: contain;
+        padding: 0px 0px 0px 40px;
+    }
+    .action{
+        @extend %display-inlineBlock;
+        width: 5%;
+    }
+    .profile{
+        @extend %display-inlineBlock;
+        width: 12%;
+        .icon{
+            @extend %display-inlineBlock;
+            width: 20%;
+        }
+        .name{
+            @extend %display-inlineBlock;
+            font-size:  $medium-font;
+        }
+    }
+}
