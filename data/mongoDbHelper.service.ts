@@ -75,10 +75,10 @@ var DeleteFn= function(collection, query){
 }
 
 var UpdateFn = function(collection, query,data){
-    var newvalues = { $set: data };
+
     return new promise((resolve,reject)=>{
         var dataCollection= database.collection(collection);
-        dataCollection.updateOne(query,newvalues,function(err, res){
+        dataCollection.updateOne(query,data,function(err, res){
             if (err) reject(err);
             resolve(true);
         });

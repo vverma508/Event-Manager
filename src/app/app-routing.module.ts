@@ -6,7 +6,8 @@ import { EventFormComponent } from './event-form/event-form.component';
 const routes: Routes = [
   {path:"",component:EventsComponent},
   {path:"create", component:EventFormComponent},
-  {path:"update/:id", component:EventFormComponent}
+  {path:"update/:id", component:EventFormComponent},
+  {path:"delete/:id", component:EventFormComponent}
 ];
 
 @NgModule({

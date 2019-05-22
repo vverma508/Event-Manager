@@ -1,5 +1,8 @@
 
-<div class="Card">
+<div class="Card" *ngIf=" !isDelete">
+    <div *ngIf="!card" class="Card_Create">
+        Click to create an Event
+    </div>
  <div class="Card_inner" *ngIf="card">
 
   <div class="Card_Header">
@@ -15,14 +18,9 @@
   </div>
 
   <div class="Card_Footer">
-      <button class="Card_Footer_Button">Like</button>
-      <button class="Card_Footer_Button">Join</button>
+      <button class="Card_Footer_Button" (click)="JoinEvent()" >Join</button>
       <button class="Card_Footer_Action" [routerLink]="['/update',card.EventId]">Edit</button>
-      <button class="Card_Footer_Action">Remove</button>
+      <button class="Card_Footer_Action" (click)="DeleteEvent()">Remove</button>
   </div>
- </div>
-
- <div *ngIf="!card" class="Card_Create">
-   Click to create an Event
  </div>
 </div>

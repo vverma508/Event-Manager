@@ -25,15 +25,14 @@ app.get('/GetAll', function(req,res){
 app.get('/Get', function(req,res){
     var query={EventId:parseInt(req.query.id)};
     database.FindOne(req.query.collection,query).then((data)=>{
-        console.log(data)
         res.json(data)
         res.end()
     })
 })
 
 app.delete('/delete', function(req,res){
-    database.delete(req.query.collection,req.query.id).then((data)=>{
-        console.log(data)
+    var query={EventId:parseInt(req.query.id)};
+    database.Delete(req.query.collection,query).then((data)=>{
         res.json(data)
         res.end()
     })
@@ -41,7 +40,6 @@ app.delete('/delete', function(req,res){
 
 app.post('/event', function(req,res){
      database.InsertOneRow(req.query.collection, req.body).then((data)=>{
-        console.log(data)
         res.json(data)
         res.end()
     });
@@ -49,8 +47,13 @@ app.post('/event', function(req,res){
 
 app.post('/update',function(req,res){
     var query={EventId:parseInt(req.body.EventId)}
-    database.Update(req.query.collection,query, req.body).then((data)=>{
-        console.log(data)
+    var newvalues = { $set: {Name:req.body.Name
+    ,Description:req.body.Description
+    ,Venue:req.body.Venue
+    ,EventDate:req.body.EventDate
+    ,Joinee:req.body.Joinee
+    } };
+    database.Update(req.query.collection,query, newvalues).then((data)=>{
         res.json(data)
         res.end()
     });

@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment.prod';
 
 export class EventsService{
 
-baseUrl:string = environment.baseUrl || "http://localhost:8080/";
+baseUrl:string =  environment.baseUrl||"http://localhost:8080/";
 constructor(private http:HttpClient) {
 
 }
@@ -24,5 +24,8 @@ constructor(private http:HttpClient) {
   }
   UpdateEvent(card){
   return this.http.post(this.baseUrl+'update?collection=events',card)
+  }
+  DeleteEvent(eventId){
+    return this.http.delete(this.baseUrl+'delete?collection=events&id='+eventId)
   }
 }

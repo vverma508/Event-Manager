@@ -46,7 +46,8 @@ __webpack_require__.r(__webpack_exports__);
 var routes = [
     { path: "", component: _events_events_component__WEBPACK_IMPORTED_MODULE_3__["EventsComponent"] },
     { path: "create", component: _event_form_event_form_component__WEBPACK_IMPORTED_MODULE_4__["EventFormComponent"] },
-    { path: "update/:id", component: _event_form_event_form_component__WEBPACK_IMPORTED_MODULE_4__["EventFormComponent"] }
+    { path: "update/:id", component: _event_form_event_form_component__WEBPACK_IMPORTED_MODULE_4__["EventFormComponent"] },
+    { path: "delete/:id", component: _event_form_event_form_component__WEBPACK_IMPORTED_MODULE_4__["EventFormComponent"] }
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -192,7 +193,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"Card\">\n <div class=\"Card_inner\" *ngIf=\"card\">\n\n  <div class=\"Card_Header\">\n    <span class=\"Card_Header_Name\">{{card.Name}}</span>\n    <span class=\"Card_Header_Author\">By: {{card.CreatedBy}}</span>\n  </div>\n  <div class=\"Card_Body\">\n    <p title=\"{{card.Description}}\"><span>Description : </span> {{card.Description}} </p>\n    <p><span>Created On : </span> {{card.CreatedDate}} </p>\n    <p><span>Venue : </span> {{card.Venue}} </p>\n    <p><span>Happening On : </span> {{card.EventDate}} </p>\n    <p><span>Interested : </span> {{card.Joinee}} </p>\n  </div>\n\n  <div class=\"Card_Footer\">\n      <button class=\"Card_Footer_Button\">Like</button>\n      <button class=\"Card_Footer_Button\">Join</button>\n      <button class=\"Card_Footer_Action\" [routerLink]=\"['/update',card.EventId]\">Edit</button>\n      <button class=\"Card_Footer_Action\">Remove</button>\n  </div>\n </div>\n\n <div *ngIf=\"!card\" class=\"Card_Create\">\n   Click to create an Event\n </div>\n</div>\n"
+module.exports = "\n<div class=\"Card\" *ngIf=\" !isDelete\">\n    <div *ngIf=\"!card\" class=\"Card_Create\">\n        Click to create an Event\n    </div>\n <div class=\"Card_inner\" *ngIf=\"card\">\n\n  <div class=\"Card_Header\">\n    <span class=\"Card_Header_Name\">{{card.Name}}</span>\n    <span class=\"Card_Header_Author\">By: {{card.CreatedBy}}</span>\n  </div>\n  <div class=\"Card_Body\">\n    <p title=\"{{card.Description}}\"><span>Description : </span> {{card.Description}} </p>\n    <p><span>Created On : </span> {{card.CreatedDate}} </p>\n    <p><span>Venue : </span> {{card.Venue}} </p>\n    <p><span>Happening On : </span> {{card.EventDate}} </p>\n    <p><span>Interested : </span> {{card.Joinee}} </p>\n  </div>\n\n  <div class=\"Card_Footer\">\n      <button class=\"Card_Footer_Button\" (click)=\"JoinEvent()\" >Join</button>\n      <button class=\"Card_Footer_Action\" [routerLink]=\"['/update',card.EventId]\">Edit</button>\n      <button class=\"Card_Footer_Action\" (click)=\"DeleteEvent()\">Remove</button>\n  </div>\n </div>\n</div>\n"
 
 /***/ }),
 
@@ -219,12 +220,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CardComponent", function() { return CardComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _events_events_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../events/events.service */ "./src/app/events/events.service.ts");
+
 
 
 var CardComponent = /** @class */ (function () {
-    function CardComponent() {
+    function CardComponent(eventService) {
+        this.eventService = eventService;
+        this.isDelete = false;
     }
     CardComponent.prototype.ngOnInit = function () {
+    };
+    CardComponent.prototype.DeleteEvent = function () {
+        var _this = this;
+        this.eventService.DeleteEvent(this.card.EventId).subscribe(function (data) {
+            _this.card = null;
+            _this.isDelete = data;
+        });
+    };
+    CardComponent.prototype.JoinEvent = function () {
+        this.card.Joinee = this.card.Joinee ? this.card.Joinee + 1 : 1;
+        this.eventService.UpdateEvent(this.card).subscribe(function (data) {
+            console.log(data);
+        });
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -236,7 +254,7 @@ var CardComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./card.component.html */ "./src/app/card/card.component.html"),
             styles: [__webpack_require__(/*! ./card.component.scss */ "./src/app/card/card.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_events_events_service__WEBPACK_IMPORTED_MODULE_2__["EventsService"]])
     ], CardComponent);
     return CardComponent;
 }());
@@ -418,15 +436,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var src_environments_environment_prod__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/environments/environment.prod */ "./src/environments/environment.prod.ts");
-
 
 
 
 var EventsService = /** @class */ (function () {
     function EventsService(http) {
         this.http = http;
-        this.baseUrl = src_environments_environment_prod__WEBPACK_IMPORTED_MODULE_3__["environment"].baseUrl || "http://localhost:8080/";
+        this.baseUrl = "http://localhost:8080/";
     }
     EventsService.prototype.GetAllEvents = function () {
         return this.http.get(this.baseUrl + "GetAll?collection=events");
@@ -439,6 +455,9 @@ var EventsService = /** @class */ (function () {
     };
     EventsService.prototype.UpdateEvent = function (card) {
         return this.http.post(this.baseUrl + 'update?collection=events', card);
+    };
+    EventsService.prototype.DeleteEvent = function (eventId) {
+        return this.http.delete(this.baseUrl + 'delete?collection=events&id=' + eventId);
     };
     EventsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({ providedIn: "root" }),
@@ -615,24 +634,6 @@ var ProfileComponent = /** @class */ (function () {
     return ProfileComponent;
 }());
 
-
-
-/***/ }),
-
-/***/ "./src/environments/environment.prod.ts":
-/*!**********************************************!*\
-  !*** ./src/environments/environment.prod.ts ***!
-  \**********************************************/
-/*! exports provided: environment */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "environment", function() { return environment; });
-var environment = {
-    production: true,
-    baseUrl: "https://angular-event-manager.herokuapp.com/"
-};
 
 
 /***/ }),
