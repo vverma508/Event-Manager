@@ -1,3 +1,24 @@
-<p>
-  event-form works!
-</p>
+<div class="event-form">
+
+<div>
+    <input type="text" placeholder="title"  [(ngModel)]="card.Name"/>
+</div>
+<div>
+    <input type="text" placeholder="description" [(ngModel)]="card.Description"/>
+</div>
+<div>
+    <input type="text" placeholder="your name" [(ngModel)]="card.CreatedBy"/>
+</div>
+<div>
+    <input type="text" placeholder="venue" [(ngModel)]="card.Venue"/>
+</div>
+<div>
+    <input type="date" placeholder="happening on" [(ngModel)]="card.EventDate"/>
+</div>
+<div>
+    <button type="submit" *ngIf="isCreate" (click)="AddNewEvent()">Create new event</button>
+    <button type="submit" *ngIf="!isCreate"  (click)="UpdateEvent()">Update event</button>
+</div>
+</div>
+
+

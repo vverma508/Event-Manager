@@ -557,7 +557,7 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! d:\Vs_Projects\Angular7Example1\event-manager-app\src\styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! D:\Vs_Projects\Angular7Example1\event-manager-app\src\styles.css */"./src/styles.css");
 
 
 /***/ })

@@ -1,4 +1,5 @@
 var mongoCLient = require('mongodb').MongoClient;
+var promise= require('bluebird');
 var dbUrl = process.env.mongoDbUrl || require('../appsettings.json').mongoDbUrl;
 var database;
 mongoCLient.connect(dbUrl, function(err, db) {
@@ -14,49 +15,83 @@ mongoCLient.connect(dbUrl, function(err, db) {
 
 });
 
-exports.InsertOneRow= function(collection,data){
+var InsertOneRowFn = function(collection,data){
 
-    var dataCollection= database.collection(collection);
-    dataCollection.insertOne(data);
-    return true;
+    return new promise((resolve,reject)=>{
+        var dataCollection= database.collection(collection);
+        dataCollection.insertOne(data);
+        resolve(true);
+    })
+
 }
 
-exports.GetAllData = function(collection){
+var GetAllDataFn = function(collection){
+    return new promise((resolve,reject)=>{
     var dataCollection= database.collection(collection);
     dataCollection.find().toArray(function(err, items) {
          if (!err){
-             return items;
+            resolve(items);
          } 
-         return err;
+         reject(err);
     });
+})
 }
 
-exports.GetAllDataByQuery = function(collection, query){
+var GetAllDataByQueryFn = function(collection, query){
+    return new promise((resolve,reject)=>{
     var dataCollection= database.collection(collection);
     dataCollection.find(query).toArray(function(err, items) {
          if (!err){
-             return items;
+            resolve(items);
          } 
-         return err;
+         reject(err);
     });
+})
 }
 
-exports.FindOne = function(collection, query){
+var FindOneFn = function(collection, query){
+    return new promise((resolve,reject)=>{
     var dataCollection= database.collection(collection);
-    dataCollection.findOne(query).toArray(function(err, items) {
-         if (!err){
-             return items;
-         } 
-         return err;
-    });
+    console.log(query);
+    dataCollection.findOne(query,function(err, items) {
+        if (!err){
+           resolve(items);
+        } 
+        reject(err);
+   });
+})
 }
 
-exports.Delete= function(collection, query){
+var DeleteFn= function(collection, query){
+    return new promise((resolve,reject)=>{
     var dataCollection= database.collection(collection);
     dataCollection.deleteOne(query,function(err, items) {
          if (err){
-            throw  err;
+            reject(err);
          } 
-         return true;
+         resolve(true);
     });
+})
+}
+
+var UpdateFn = function(collection, query,data){
+    var newvalues = { $set: data };
+    return new promise((resolve,reject)=>{
+        var dataCollection= database.collection(collection);
+        dataCollection.updateOne(query,newvalues,function(err, res){
+            if (err) reject(err);
+            resolve(true);
+        });
+
+    })
+}
+
+
+exports.DataHelper={
+    InsertOneRow:InsertOneRowFn,
+    GetAllData:GetAllDataFn,
+    GetAllDataByQuery:GetAllDataByQueryFn,
+    FindOne:FindOneFn,
+    Delete:DeleteFn,
+    Update:UpdateFn
 }
